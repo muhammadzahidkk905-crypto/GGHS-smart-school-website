@@ -163,5 +163,49 @@
 </footer>
 
 </main>
+<section style="padding:25px;margin:20px 0;background:#eef4ff;border-radius:15px;font-family:Arial">
+  <h2>📊 Live Attendance Dashboard</h2>
+  <p id="liveDate">Loading...</p>
+  <div style="display:flex;gap:12px;flex-wrap:wrap">
+    <div style="background:white;padding:18px;border-radius:12px;flex:1;min-width:110px">
+      <h3>Present</h3><h2 id="livePresent">--</h2>
+    </div>
+    <div style="background:white;padding:18px;border-radius:12px;flex:1;min-width:110px">
+      <h3>Absent</h3><h2 id="liveAbsent">--</h2>
+    </div>
+    <div style="background:white;padding:18px;border-radius:12px;flex:1;min-width:110px">
+      <h3>Leave</h3><h2 id="liveLeave">--</h2>
+    </div>
+  </div>
+  <p id="liveMessage">Attendance loading...</p>
+</section>
+
+<script>
+window.gghsAttendanceCallback = function(data) {
+  if (!data.success) {
+    document.getElementById("liveMessage").innerText =
+      "Error: " + data.error;
+    return;
+  }
+
+  document.getElementById("livePresent").innerText = data.present;
+  document.getElementById("liveAbsent").innerText = data.absent;
+  document.getElementById("liveLeave").innerText = data.leave;
+  document.getElementById("liveDate").innerText = "Date: " + data.date;
+  document.getElementById("liveMessage").innerText =
+    "Attendance updated successfully!";
+};
+
+const attendanceScript = document.createElement("script");
+attendanceScript.src =
+  "https://script.google.com/macros/s/AKfycbzY8fS5Bf6xg8_sGqNXIdkZjRoNBObJUJtZ8IM4FicWdgHhx83N91DiIM0qk7JAciII/exec?callback=gghsAttendanceCallback";
+
+attendanceScript.onerror = function() {
+  document.getElementById("liveMessage").innerText =
+    "Could not load attendance. Please check deployment access.";
+};
+
+document.body.appendChild(attendanceScript);
+</script>
 </body>
 </html>
